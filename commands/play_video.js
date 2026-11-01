@@ -1,6 +1,6 @@
 /*CMD
 command: /play_video
-help: Streams the requested video directly to user
+help: Streams the requested video directly to user with attached controls
 need_reply: false
 auto_retry_time: 
 folder: 
@@ -45,7 +45,8 @@ for (let i = 0; i < categories.length; i++) {
 }
 
 // Increment views
-videos[vidIndex].views = (videos[vidIndex].views || 0) + 1;
+let currentViews = (vid.views || 0) + 1;
+videos[vidIndex].views = currentViews;
 Bot.setProperty("videos", videos, "json");
 
 let totalViews = Bot.getProperty("total_views_count") || 0;
@@ -61,27 +62,35 @@ if (watched.indexOf(vid.id) === -1) {
 let userWatchedCount = User.getProperty("user_watched_count") || 0;
 User.setProperty("user_watched_count", userWatchedCount + 1, "integer");
 
-// Stream video
+// Stream video with interactive controls attached directly
+let descPart = vid.description ? "\n\n📝 _" + vid.description + "_" : "";
 let caption =
   "🎬 *" + vid.title + "*\n" +
-  "📂 Category: " + catEmoji + " " + catName + "\n\n" +
-  "_" + (vid.description || "") + "_";
+  "━━━━━━━━━━━━━━━━━━━━━\n" +
+  "📂 *Category:* " + catEmoji + " " + catName + "\n" +
+  "👁 *Views:* " + currentViews +
+  descPart + "\n" +
+  "━━━━━━━━━━━━━━━━━━━━━\n" +
+  "✨ _Enjoy watching!_";
+
+let inlineKeyboard = [
+  [
+    { text: "🎲 Next Random Video", callback_data: "/random_video" },
+    { text: catEmoji + " " + catName, callback_data: "/category " + vid.category_id }
+  ],
+  [
+    { text: "📂 All Categories", callback_data: "/categories" },
+    { text: "🏠 Main Menu", callback_data: "/start" }
+  ]
+];
 
 Api.sendVideo({
   chat_id: chat.chatid,
   video: vid.file_id,
   caption: caption,
-  parse_mode: "Markdown"
+  parse_mode: "Markdown",
+  supports_streaming: true,
+  reply_markup: {
+    inline_keyboard: inlineKeyboard
+  }
 });
-
-// Navigation buttons under video
-let buttons = [
-  [
-    { title: "🎲 Next Random Video", command: "/random_video" },
-    { title: "📂 Categories", command: "/categories" }
-  ],
-  [{ title: "🏠 Main Menu", command: "/start" }]
-];
-
-Bot.sendInlineKeyboard(buttons, "Enjoy watching! Select an option below 👇");
-

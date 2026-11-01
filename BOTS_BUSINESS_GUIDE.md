@@ -50,8 +50,11 @@ Agar aap Git use nahi karna chahte, toh aap direct https://app.bots.business/ ke
 | Command Name | File Path | Need Reply? | Description |
 | :--- | :--- | :--- | :--- |
 | `/start` | `commands/_start.js` | No | Welcome message & Referral tracking |
+| `/search` | `commands/search.js` | No | Video Search by Title / Keyword |
+| `/search_query` | `commands/search_query.js` | **Yes** | Executes Search Query |
+| `/daily_bonus` | `commands/daily_bonus.js` | No | Free Daily Bonus Video Claim (24h) |
 | `/categories` | `commands/categories.js` | No | Browse categories with counts |
-| `/category` | `commands/category.js` | No | Videos inside category |
+| `/category` | `commands/category.js` | No | Paginated videos inside category |
 | `/video_info` | `commands/video_info.js` | No | Video details card |
 | `/play_video` | `commands/play_video.js` | No | Stream video via Telegram |
 | `/random_video` | `commands/random_video.js` | No | Surprise unwatched video |

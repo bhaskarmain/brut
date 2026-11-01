@@ -180,6 +180,7 @@ async def handle_play_video(callback: CallbackQuery):
             video=video["file_id"],
             caption=caption,
             parse_mode="HTML",
+            supports_streaming=True,
             reply_markup=get_video_player_keyboard(video["category_id"])
         )
         # Record watch event in background
@@ -218,6 +219,7 @@ async def handle_watch_random(callback: CallbackQuery):
             video=video["file_id"],
             caption=caption,
             parse_mode="HTML",
+            supports_streaming=True,
             reply_markup=get_video_player_keyboard(video["category_id"])
         )
         await video_service.record_watch(user_id=user_id, video_id=video["id"], is_reward=0)

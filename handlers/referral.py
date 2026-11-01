@@ -34,6 +34,19 @@ async def handle_referral_dashboard(callback: CallbackQuery, bot: Bot):
     status_badge = "🟢 Active" if dashboard["is_enabled"] else "🔴 Paused by Admin"
     req = dashboard["required_per_reward"]
     unclaimed = dashboard["unclaimed_rewards"]
+    valid_refs = dashboard["valid_referrals"]
+
+    # Calculate cycle progress and progress bar
+    current_cycle = valid_refs % req
+    percent = int((current_cycle / req) * 100) if req else 0
+    filled = int(round(percent / 10))
+    bar = "█" * filled + "░" * (10 - filled)
+
+    tier = "🥉 Bronze Member"
+    if valid_refs >= 10:
+        tier = "🥇 Gold Champion"
+    elif valid_refs >= 4:
+        tier = "🥈 Silver VIP"
 
     claim_banner = ""
     if unclaimed > 0:
@@ -47,12 +60,15 @@ async def handle_referral_dashboard(callback: CallbackQuery, bot: Bot):
         f"🎁 <b>Referral Rewards Dashboard</b>\n"
         f"━━━━━━━━━━━━━━━━━━━━━\n"
         f"{claim_banner}"
+        f"🏅 <b>Your Tier:</b> {tier}\n"
         f"👥 <b>Total Invited:</b> {dashboard['total_referrals']}\n"
-        f"✅ <b>Successful Referrals:</b> {dashboard['valid_referrals']}\n"
+        f"✅ <b>Successful Referrals:</b> {valid_refs}\n"
         f"🏆 <b>Total Videos Earned:</b> {dashboard['total_rewards_earned']}\n"
         f"🎁 <b>Rewards Claimed:</b> {dashboard['rewards_claimed']}\n"
-        f"⏳ <b>Unclaimed Rewards:</b> <b>{unclaimed}</b>\n"
-        f"🎯 <b>Next Reward In:</b> {dashboard['referrals_until_next']} more referral(s)\n"
+        f"⏳ <b>Unclaimed Rewards:</b> <b>{unclaimed}</b>\n\n"
+        f"🎯 <b>Next Reward Progress:</b>\n"
+        f"[{bar}] <b>{percent}%</b>\n"
+        f"<i>Only {dashboard['referrals_until_next']} more invite(s) to unlock your next reward!</i>\n"
         f"⚡ <b>Program Status:</b> {status_badge}\n\n"
         f"📜 <b>Reward Rules:</b>\n"
         f"• <b>{req} Referrals</b> = <b>1 Free Random Video</b>\n"
@@ -107,6 +123,7 @@ async def handle_claim_reward(callback: CallbackQuery, bot: Bot):
             video=video["file_id"],
             caption=caption,
             parse_mode="HTML",
+            supports_streaming=True,
             reply_markup=get_video_player_keyboard(video["category_id"])
         )
 

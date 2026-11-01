@@ -71,33 +71,37 @@ for (let i = 0; i < categories.length; i++) {
   }
 }
 
-// Send reward video
+let remaining = unclaimedRewards - 1;
+
+// Send reward video with attached controls
+let descPart = rewardVid.description ? "\n\n📝 _" + rewardVid.description + "_" : "";
 let caption =
   "🎁 *FREE REFERRAL REWARD UNLOCKED!* 🏆\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
   "🎬 *" + rewardVid.title + "*\n" +
-  "📂 Category: " + catEmoji + " " + catName + "\n\n" +
-  "_" + (rewardVid.description || "Enjoy your exclusive referral reward video!") + "_\n" +
+  "📂 *Category:* " + catEmoji + " " + catName +
+  descPart + "\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
-  "🎉 _Thank you for supporting our community by inviting friends!_";
+  "🎉 _Claimed reward #" + (rewardsClaimed + 1) + "! Keep inviting friends to earn more!_";
+
+let inlineKeyboard = [];
+if (remaining > 0) {
+  inlineKeyboard.push([
+    { text: "🎁 Claim Another (" + remaining + " Left!)", callback_data: "/claim_reward" }
+  ]);
+}
+inlineKeyboard.push([
+  { text: "📊 Referral Dashboard", callback_data: "/referral" },
+  { text: "🏠 Main Menu", callback_data: "/start" }
+]);
 
 Api.sendVideo({
   chat_id: chat.chatid,
   video: rewardVid.file_id,
   caption: caption,
-  parse_mode: "Markdown"
+  parse_mode: "Markdown",
+  supports_streaming: true,
+  reply_markup: {
+    inline_keyboard: inlineKeyboard
+  }
 });
-
-// Calculate remaining
-let remaining = unclaimedRewards - 1;
-let buttons = [];
-if (remaining > 0) {
-  buttons.push([{ title: "🎁 Claim Another Reward (" + remaining + " Left)", command: "/claim_reward" }]);
-}
-buttons.push([
-  { title: "🎁 Referral Dashboard", command: "/referral" },
-  { title: "🏠 Main Menu", command: "/start" }
-]);
-
-Bot.sendInlineKeyboard(buttons, "✨ You have successfully claimed 1 free video reward!");
-
