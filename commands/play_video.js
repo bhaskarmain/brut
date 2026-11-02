@@ -77,7 +77,7 @@ let inlineKeyboard = [
     { text: "▶️ Next Video", callback_data: "/category " + vid.category_id }
   ],
   [
-    { text: "📂 Categories", callback_data: "/categories" },
+    { text: "🎬 Watch Videos", callback_data: "/categories" },
     { text: "🏠 Main Menu", callback_data: "/start" }
   ]
 ];

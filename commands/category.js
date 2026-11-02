@@ -45,7 +45,7 @@ let catEmoji = cat.emoji || "📁";
 
 if (catVideos.length === 0) {
   let buttons = [
-    [{ title: "📂 All Categories", command: "/categories" }],
+    [{ title: "🎬 Watch Videos", command: "/categories" }],
     [{ title: "🏠 Main Menu", command: "/start" }]
   ];
   Bot.sendInlineKeyboard(
@@ -105,7 +105,7 @@ let inlineKeyboard = [
     { text: "▶️ Next Video", callback_data: "/category " + cat.id }
   ],
   [
-    { text: "📂 Categories", callback_data: "/categories" },
+    { text: "🎬 Watch Videos", callback_data: "/categories" },
     { text: "🏠 Main Menu", callback_data: "/start" }
   ]
 ];

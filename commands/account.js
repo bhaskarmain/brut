@@ -37,7 +37,7 @@ let text =
 let buttons = [
   [
     { title: "🎁 Referral Rewards", command: "/referral" },
-    { title: "🎬 Browse Videos", command: "/categories" }
+    { title: "🎬 Watch Videos", command: "/categories" }
   ],
   [
     { title: "🔄 Refresh", command: "/account" },

@@ -15,8 +15,7 @@ def get_main_menu_keyboard(user_id: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.row(
-        InlineKeyboardButton(text="🎬 Watch Videos", callback_data="watch_videos_menu"),
-        InlineKeyboardButton(text="📂 Browse Categories", callback_data="browse_categories")
+        InlineKeyboardButton(text="🎬 Watch Videos", callback_data="watch_videos_menu")
     )
     builder.row(
         InlineKeyboardButton(text="🎁 Referral Rewards", callback_data="referral_dashboard"),
@@ -120,7 +119,7 @@ def get_video_player_keyboard(category_id: int) -> InlineKeyboardMarkup:
 
     builder.row(
         InlineKeyboardButton(text="▶️ Next Video", callback_data=f"play_cat_{category_id}"),
-        InlineKeyboardButton(text="📂 Categories", callback_data="browse_categories")
+        InlineKeyboardButton(text="🎬 Watch Videos", callback_data="watch_videos_menu")
     )
     builder.row(
         InlineKeyboardButton(text="🏠 Main Menu", callback_data="main_menu")
@@ -176,7 +175,7 @@ def get_account_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.row(
         InlineKeyboardButton(text="🎁 Referral Rewards", callback_data="referral_dashboard"),
-        InlineKeyboardButton(text="🎬 Browse Videos", callback_data="browse_categories")
+        InlineKeyboardButton(text="🎬 Watch Videos", callback_data="watch_videos_menu")
     )
     builder.row(
         InlineKeyboardButton(text="🔄 Refresh", callback_data="my_account"),
@@ -189,7 +188,7 @@ def get_help_keyboard() -> InlineKeyboardMarkup:
     """Help menu navigation."""
     builder = InlineKeyboardBuilder()
     builder.row(
-        InlineKeyboardButton(text="🎬 Start Watching", callback_data="browse_categories"),
+        InlineKeyboardButton(text="🎬 Watch Videos", callback_data="watch_videos_menu"),
         InlineKeyboardButton(text="🎁 Referral Program", callback_data="referral_dashboard")
     )
     builder.row(

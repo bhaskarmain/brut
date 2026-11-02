@@ -19,7 +19,7 @@ if (lastClaim && (now - lastClaim < cooldown)) {
   let hoursLeft = Math.ceil(diff / (60 * 60 * 1000));
 
   let buttons = [
-    [{ title: "📂 Browse Categories", command: "/categories" }],
+    [{ title: "🎬 Watch Videos", command: "/categories" }],
     [{ title: "🏠 Main Menu", command: "/start" }]
   ];
   Bot.sendInlineKeyboard(
@@ -68,7 +68,7 @@ let caption =
 
 let inlineKeyboard = [
   [
-    { text: "📂 Categories", callback_data: "/categories" },
+    { text: "🎬 Watch Videos", callback_data: "/categories" },
     { text: "🏠 Main Menu", callback_data: "/start" }
   ]
 ];

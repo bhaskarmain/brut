@@ -34,12 +34,12 @@ let buttons = [];
 if (results.length === 0) {
   buttons.push([
     { title: "🔍 Search Again", command: "/search" },
-    { title: "📂 Browse Categories", command: "/categories" }
+    { title: "🎬 Watch Videos", command: "/categories" }
   ]);
   buttons.push([{ title: "🏠 Main Menu", command: "/start" }]);
   Bot.sendInlineKeyboard(
     buttons,
-    "🔍 *No matching videos found for:* `" + message.trim() + "`\n\nTry a different keyword or browse categories 👇"
+    "🔍 *No matching videos found for:* `" + message.trim() + "`\n\nTry a different keyword or watch videos 👇"
   );
   return;
 }
@@ -54,7 +54,7 @@ for (let i = 0; i < displayCount; i++) {
 
 buttons.push([
   { title: "🔍 New Search", command: "/search" },
-  { title: "📂 All Categories", command: "/categories" }
+  { title: "🎬 Watch Videos", command: "/categories" }
 ]);
 buttons.push([{ title: "🏠 Main Menu", command: "/start" }]);
 

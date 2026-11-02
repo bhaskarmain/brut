@@ -79,7 +79,7 @@ async def handle_start(message: Message, bot: Bot):
         f"👋 <b>Welcome, {first_name}!</b>\n\n"
         f"🎬 <b>Smart Video Reward Bot</b> is your premium hub for discovering high-quality videos and earning rewards!\n\n"
         f"📌 <b>What you can do:</b>\n"
-        f"• 📂 <b>Browse Categories:</b> Explore hand-picked video categories.\n"
+        f"• 🎬 <b>Watch Videos:</b> Choose a category to instantly stream random videos.\n"
         f"• 🎁 <b>Referral Rewards:</b> Invite friends & earn <b>1 free video every 2 referrals</b>!\n"
         f"• 📊 <b>Track Stats:</b> Monitor your views, referrals, and rewards.\n\n"
         f"Select an option below to get started 👇"

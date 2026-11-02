@@ -27,7 +27,7 @@ async def handle_browse_categories(callback: CallbackQuery):
 
     if not categories:
         text = (
-            "📂 <b>Video Categories</b>\n\n"
+            "🎬 <b>Watch Videos</b>\n\n"
             "Currently, there are no categories available.\n"
             "Our administrators are uploading new content. Please check back soon!"
         )
@@ -39,8 +39,8 @@ async def handle_browse_categories(callback: CallbackQuery):
         return
 
     text = (
-        "📂 <b>Video Categories</b>\n\n"
-        "Select any category below to instantly watch a video 👇"
+        "🎬 <b>Watch Videos</b>\n\n"
+        "Select a category below to instantly stream a random video 👇"
     )
     keyboard = get_categories_keyboard(categories)
 

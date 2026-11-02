@@ -16,7 +16,7 @@ if (categories.length === 0) {
   let buttons = [[{ title: "🔙 Back to Main Menu", command: "/start" }]];
   Bot.sendInlineKeyboard(
     buttons,
-    "📂 *Video Categories*\n\nCurrently, there are no categories available. Please check back soon!"
+    "🎬 *Watch Videos*\n\nCurrently, there are no categories available. Please check back soon!"
   );
   return;
 }
@@ -39,11 +39,11 @@ if (row.length > 0) {
   buttons.push(row);
 }
 
-// Bottom options (Random video button removed as requested)
+// Bottom options
 buttons.push([{ title: "🔙 Back to Main Menu", command: "/start" }]);
 
 let msg =
-  "📂 *Video Categories*\n\n" +
-  "Select any category below to instantly watch a video 👇";
+  "🎬 *Watch Videos*\n\n" +
+  "Select a category below to instantly stream a random video 👇";
 
 Bot.sendInlineKeyboard(buttons, msg);

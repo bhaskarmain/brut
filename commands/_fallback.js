@@ -12,8 +12,7 @@ CMD*/
 
 let buttons = [
   [
-    { title: "🎬 Watch Videos", command: "/categories" },
-    { title: "📂 Browse Categories", command: "/categories" }
+    { title: "🎬 Watch Videos", command: "/categories" }
   ],
   [
     { title: "🎁 Referral Rewards", command: "/referral" },

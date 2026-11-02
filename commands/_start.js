@@ -105,8 +105,7 @@ if (!isRegistered) {
 // 3. Render Main Menu with Buttons
 let buttons = [
   [
-    { title: "🎬 Watch Videos", command: "/categories" },
-    { title: "📂 Browse Categories", command: "/categories" }
+    { title: "🎬 Watch Videos", command: "/categories" }
   ],
   [
     { title: "🔍 Search Videos", command: "/search" },
@@ -132,7 +131,7 @@ let welcomeText =
   "👋 *Welcome, " + (user.first_name || "Friend") + "!*\n\n" +
   "🎬 *Smart Video Reward Bot*\n\n" +
   "📌 *What you can do:*\n" +
-  "• 📂 *Browse Categories:* Explore hand-picked videos.\n" +
+  "• 🎬 *Watch Videos:* Choose a category to instantly stream random videos.\n" +
   "• 🔍 *Instant Search:* Find videos by keywords.\n" +
   "• 🌟 *Daily Bonus:* Claim a free surprise video every 24 hours!\n" +
   "• 🎁 *Referral Rewards:* Invite friends & earn *1 free video every 2 referrals*!\n" +
