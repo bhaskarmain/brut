@@ -121,9 +121,8 @@ let buttons = [
   ]
 ];
 
-// Show Admin button if admin
-let adminIds = Bot.getProperty("admin_ids") || [];
-if (adminIds.indexOf(user.telegramid) > -1 || adminIds.indexOf(String(user.telegramid)) > -1) {
+// Show Admin button only for authorized admin 8789936408
+if (user.telegramid == 8789936408 || user.telegramid == "8789936408") {
   buttons.push([{ title: "🛠 Open Admin Panel", command: "/admin" }]);
 }
 

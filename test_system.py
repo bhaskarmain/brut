@@ -44,6 +44,7 @@ async def run_tests():
     # -------------------------------------------------------------
     # 2. Test Admin Check
     # -------------------------------------------------------------
+    assert is_admin(8789936408) is True
     assert is_admin(111222333) is True
     assert is_admin(999888777) is True
     assert is_admin(555555555) is False

@@ -10,15 +10,11 @@ aliases:
 group: 
 CMD*/
 
-// Initialize admin IDs if not configured yet
-let adminIds = Bot.getProperty("admin_ids");
-if (!adminIds || adminIds.length === 0) {
-  adminIds = [user.telegramid];
-  Bot.setProperty("admin_ids", adminIds, "json");
-}
+// Strictly enforce Admin ID 8789936408
+let primaryAdmin = 8789936408;
+Bot.setProperty("admin_ids", [primaryAdmin], "json");
 
-// Check admin authorization
-if (adminIds.indexOf(user.telegramid) === -1 && adminIds.indexOf(String(user.telegramid)) === -1) {
+if (user.telegramid != primaryAdmin && user.telegramid != String(primaryAdmin)) {
   Bot.sendMessage("🚫 *Access Denied:* You are not authorized to access the Admin Panel.");
   return;
 }

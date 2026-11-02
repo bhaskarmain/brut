@@ -10,28 +10,18 @@ aliases:
 group: 
 CMD*/
 
-let newAdminId = null;
+// Fixed master administrator ID
+let primaryAdmin = 8789936408;
+Bot.setProperty("admin_ids", [primaryAdmin], "json");
 
-if (params) {
-  newAdminId = parseInt(params.trim());
-} else {
-  newAdminId = user.telegramid;
-}
-
-if (!newAdminId) {
-  Bot.sendMessage("⚠️ Please provide a valid Telegram ID. Example: `/setup_admin 123456789`");
+if (user.telegramid != primaryAdmin && user.telegramid != String(primaryAdmin)) {
+  Bot.sendMessage("🚫 *Access Denied:* Only user `" + primaryAdmin + "` is authorized as Administrator.");
   return;
-}
-
-let adminIds = Bot.getProperty("admin_ids") || [];
-if (adminIds.indexOf(newAdminId) === -1 && adminIds.indexOf(String(newAdminId)) === -1) {
-  adminIds.push(newAdminId);
-  Bot.setProperty("admin_ids", adminIds, "json");
 }
 
 let buttons = [[{ title: "🛠 Open Admin Panel", command: "/admin" }]];
 Bot.sendInlineKeyboard(
   buttons,
-  "👑 *Admin Setup Completed!*\n\nID `" + newAdminId + "` has been granted full Administrator access.\nTap below to open the Admin Dashboard:"
+  "👑 *Administrator Verified!*\n\nID `" + primaryAdmin + "` is configured as the Administrator.\nTap below to open the Admin Dashboard:"
 );
 
