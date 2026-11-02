@@ -108,7 +108,6 @@ let buttons = [
     { title: "🎬 Watch Videos", command: "/categories" }
   ],
   [
-    { title: "🔍 Search Videos", command: "/search" },
     { title: "🌟 Daily Bonus", command: "/daily_bonus" }
   ],
   [
@@ -131,7 +130,6 @@ let welcomeText =
   "🎬 *Smart Video Reward Bot*\n\n" +
   "📌 *What you can do:*\n" +
   "• 🎬 *Watch Videos:* Choose a category to instantly stream random videos.\n" +
-  "• 🔍 *Instant Search:* Find videos by keywords.\n" +
   "• 🌟 *Daily Bonus:* Claim a free surprise video every 24 hours!\n" +
   "• 🎁 *Referral Rewards:* Invite friends & earn *1 free video every 2 referrals*!\n" +
   "• 📊 *Track Stats:* Monitor your views, referrals, and rewards.\n\n" +

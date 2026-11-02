@@ -1,6 +1,6 @@
 /*CMD
 command: /admin_upload_pickcat
-help: Step 2 of Video Upload - Expect Video File
+help: Step 2 of Video Upload - Expect Video or ZIP File
 need_reply: false
 auto_retry_time: 
 folder: 
@@ -21,9 +21,8 @@ User.setProperty("upload_cat_id", catId, "integer");
 let buttons = [[{ title: "❌ Cancel", command: "/admin" }]];
 Bot.sendInlineKeyboard(
   buttons,
-  "📤 *Upload Video — Step 2 of 4*\n\n" +
-  "Now send or forward the *video file* directly into this chat:"
+  "📤 *Upload Content — Step 2 of 4*\n\n" +
+  "Send or forward the *video file (MP4/MOV)* or a *.ZIP archive* directly into this chat:"
 );
 
 Bot.run({ command: "/admin_upload_got_video" });
-

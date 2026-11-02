@@ -1,6 +1,6 @@
 /*CMD
 command: /play_video
-help: Streams the requested video directly to user with attached controls
+help: Streams the requested video or document directly to user with attached controls
 need_reply: false
 auto_retry_time: 
 folder: 
@@ -26,7 +26,7 @@ for (let i = 0; i < videos.length; i++) {
 }
 
 if (vidIndex === -1) {
-  Bot.sendMessage("⚠️ Video not found or has been removed.");
+  Bot.sendMessage("⚠️ Content not found or has been removed.");
   return;
 }
 
@@ -62,7 +62,7 @@ if (watched.indexOf(vid.id) === -1) {
 let userWatchedCount = User.getProperty("user_watched_count") || 0;
 User.setProperty("user_watched_count", userWatchedCount + 1, "integer");
 
-// Stream video with interactive controls attached directly
+// Stream video or document with interactive controls attached directly
 let descPart = vid.description ? "\n\n📝 _" + vid.description + "_" : "";
 let caption =
   "🎬 *" + vid.title + "*\n" +
@@ -82,13 +82,25 @@ let inlineKeyboard = [
   ]
 ];
 
-Api.sendVideo({
-  chat_id: chat.chatid,
-  video: vid.file_id,
-  caption: caption,
-  parse_mode: "Markdown",
-  supports_streaming: true,
-  reply_markup: {
-    inline_keyboard: inlineKeyboard
-  }
-});
+if (vid.is_zip) {
+  Api.sendDocument({
+    chat_id: chat.chatid,
+    document: vid.file_id,
+    caption: caption,
+    parse_mode: "Markdown",
+    reply_markup: {
+      inline_keyboard: inlineKeyboard
+    }
+  });
+} else {
+  Api.sendVideo({
+    chat_id: chat.chatid,
+    video: vid.file_id,
+    caption: caption,
+    parse_mode: "Markdown",
+    supports_streaming: true,
+    reply_markup: {
+      inline_keyboard: inlineKeyboard
+    }
+  });
+}

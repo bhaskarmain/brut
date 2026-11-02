@@ -1,6 +1,6 @@
 /*CMD
 command: /category
-help: Instantly streams a random video from the selected category
+help: Instantly streams a random video or content from the selected category
 need_reply: false
 auto_retry_time: 
 folder: 
@@ -110,13 +110,25 @@ let inlineKeyboard = [
   ]
 ];
 
-Api.sendVideo({
-  chat_id: chat.chatid,
-  video: selectedVid.file_id,
-  caption: caption,
-  parse_mode: "Markdown",
-  supports_streaming: true,
-  reply_markup: {
-    inline_keyboard: inlineKeyboard
-  }
-});
+if (selectedVid.is_zip) {
+  Api.sendDocument({
+    chat_id: chat.chatid,
+    document: selectedVid.file_id,
+    caption: caption,
+    parse_mode: "Markdown",
+    reply_markup: {
+      inline_keyboard: inlineKeyboard
+    }
+  });
+} else {
+  Api.sendVideo({
+    chat_id: chat.chatid,
+    video: selectedVid.file_id,
+    caption: caption,
+    parse_mode: "Markdown",
+    supports_streaming: true,
+    reply_markup: {
+      inline_keyboard: inlineKeyboard
+    }
+  });
+}
