@@ -635,6 +635,41 @@ class Database:
             row = await cursor.fetchone()
             return dict(row) if row else None
 
+    async def get_random_video_by_category(
+        self, category_id: int, user_id: Optional[int] = None
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get random video from a specific category.
+        Prioritizes unwatched videos for this user.
+        """
+        async with self.connect() as conn:
+            if user_id:
+                cursor = await conn.execute("""
+                    SELECT v.*, c.name AS category_name, c.emoji AS category_emoji
+                    FROM videos v
+                    JOIN categories c ON v.category_id = c.id
+                    WHERE v.category_id = ? AND v.id NOT IN (
+                        SELECT video_id FROM watched_videos WHERE user_id = ?
+                    )
+                    ORDER BY RANDOM()
+                    LIMIT 1
+                """, (category_id, user_id))
+                row = await cursor.fetchone()
+                if row:
+                    return dict(row)
+
+            # Fallback to any random video from that category
+            cursor = await conn.execute("""
+                SELECT v.*, c.name AS category_name, c.emoji AS category_emoji
+                FROM videos v
+                JOIN categories c ON v.category_id = c.id
+                WHERE v.category_id = ?
+                ORDER BY RANDOM()
+                LIMIT 1
+            """, (category_id,))
+            row = await cursor.fetchone()
+            return dict(row) if row else None
+
     # =========================================================================
     # SETTINGS OPERATIONS
     # =========================================================================

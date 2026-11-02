@@ -19,3 +19,4 @@ Bot.sendInlineKeyboard(
 );
 
 Bot.run({ command: "/search_query" });
+

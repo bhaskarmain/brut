@@ -68,10 +68,9 @@ let caption =
 
 let inlineKeyboard = [
   [
-    { text: "🎲 Next Random Video", callback_data: "/random_video" },
-    { text: "📂 Categories", callback_data: "/categories" }
-  ],
-  [{ text: "🏠 Main Menu", callback_data: "/start" }]
+    { text: "📂 Categories", callback_data: "/categories" },
+    { text: "🏠 Main Menu", callback_data: "/start" }
+  ]
 ];
 
 Api.sendVideo({

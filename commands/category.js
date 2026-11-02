@@ -1,6 +1,6 @@
 /*CMD
 command: /category
-help: Displays paginated videos inside a category
+help: Instantly streams a random video from the selected category
 need_reply: false
 auto_retry_time: 
 folder: 
@@ -12,8 +12,6 @@ CMD*/
 
 let parts = params ? params.trim().split(" ") : [];
 let catId = parseInt(parts[0]);
-let page = parts.length > 1 ? parseInt(parts[1]) : 1;
-if (!page || page < 1) { page = 1; }
 
 if (!catId) {
   Bot.runCommand("/categories");
@@ -57,43 +55,68 @@ if (catVideos.length === 0) {
   return;
 }
 
-let pageSize = 6;
-let totalVideos = catVideos.length;
-let totalPages = Math.ceil(totalVideos / pageSize) || 1;
-if (page > totalPages) { page = totalPages; }
-
-let startIndex = (page - 1) * pageSize;
-let pageVideos = catVideos.slice(startIndex, startIndex + pageSize);
-
-let buttons = [];
-for (let i = 0; i < pageVideos.length; i++) {
-  let v = pageVideos[i];
-  let shortTitle = v.title.length > 28 ? v.title.substring(0, 28) + "..." : v.title;
-  buttons.push([{ title: "▶️ " + shortTitle, command: "/video_info " + v.id }]);
+// Filter unwatched videos in this category
+let watched = User.getProperty("watched_videos") || [];
+let unwatched = [];
+for (let i = 0; i < catVideos.length; i++) {
+  if (watched.indexOf(catVideos[i].id) === -1) {
+    unwatched.push(catVideos[i]);
+  }
 }
 
-// Pagination controls if more than 1 page
-if (totalPages > 1) {
-  let navRow = [];
-  if (page > 1) {
-    navRow.push({ title: "◀️ Prev", command: "/category " + catId + " " + (page - 1) });
+// Prioritize unwatched video, otherwise pick random from category
+let pool = unwatched.length > 0 ? unwatched : catVideos;
+let randomIndex = Math.floor(Math.random() * pool.length);
+let selectedVid = pool[randomIndex];
+
+// Update views
+for (let i = 0; i < allVideos.length; i++) {
+  if (allVideos[i].id === selectedVid.id) {
+    allVideos[i].views = (allVideos[i].views || 0) + 1;
+    break;
   }
-  navRow.push({ title: "📄 " + page + "/" + totalPages, command: "/category " + catId + " " + page });
-  if (page < totalPages) {
-    navRow.push({ title: "Next ▶️", command: "/category " + catId + " " + (page + 1) });
-  }
-  buttons.push(navRow);
+}
+Bot.setProperty("videos", allVideos, "json");
+
+let totalViews = Bot.getProperty("total_views_count") || 0;
+Bot.setProperty("total_views_count", totalViews + 1, "integer");
+
+// Record on user
+if (watched.indexOf(selectedVid.id) === -1) {
+  watched.push(selectedVid.id);
+  User.setProperty("watched_videos", watched, "json");
 }
 
-buttons.push([
-  { title: "📂 All Categories", command: "/categories" },
-  { title: "🏠 Main Menu", command: "/start" }
-]);
+let userWatchedCount = User.getProperty("user_watched_count") || 0;
+User.setProperty("user_watched_count", userWatchedCount + 1, "integer");
 
-let msg =
-  catEmoji + " *" + cat.name + "*\n" +
+// Caption (Notice: No video count shown anywhere)
+let descPart = selectedVid.description ? "\n\n📝 _" + selectedVid.description + "_" : "";
+let caption =
+  "🎬 *" + selectedVid.title + "*\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
-  "Total Videos: *" + totalVideos + "* | Page *" + page + "/" + totalPages + "*\n\n" +
-  "Select a video below to view details and stream 👇";
+  "📂 *Category:* " + catEmoji + " " + cat.name +
+  descPart + "\n" +
+  "━━━━━━━━━━━━━━━━━━━━━\n" +
+  "✨ _Enjoy watching!_";
 
-Bot.sendInlineKeyboard(buttons, msg);
+let inlineKeyboard = [
+  [
+    { text: "▶️ Next Video", callback_data: "/category " + cat.id }
+  ],
+  [
+    { text: "📂 Categories", callback_data: "/categories" },
+    { text: "🏠 Main Menu", callback_data: "/start" }
+  ]
+];
+
+Api.sendVideo({
+  chat_id: chat.chatid,
+  video: selectedVid.file_id,
+  caption: caption,
+  parse_mode: "Markdown",
+  supports_streaming: true,
+  reply_markup: {
+    inline_keyboard: inlineKeyboard
+  }
+});

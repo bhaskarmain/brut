@@ -39,8 +39,8 @@ async def handle_browse_categories(callback: CallbackQuery):
         return
 
     text = (
-        "📂 <b>Browse Video Categories</b>\n\n"
-        "Select a category below to explore available videos or hit <b>Surprise Me</b> for a random pick 👇"
+        "📂 <b>Video Categories</b>\n\n"
+        "Select any category below to instantly watch a video 👇"
     )
     keyboard = get_categories_keyboard(categories)
 
@@ -50,6 +50,58 @@ async def handle_browse_categories(callback: CallbackQuery):
         await callback.message.answer(text, reply_markup=keyboard, parse_mode="HTML")
 
     await callback.answer()
+
+
+@router.callback_query(F.data.startswith("play_cat_"))
+async def handle_play_category_random(callback: CallbackQuery):
+    """
+    Directly streams a random video from the chosen category.
+    Prioritizes unwatched videos in this category.
+    """
+    cat_id = int(callback.data.split("_")[2])
+    category = await video_service.get_category(cat_id)
+    if not category:
+        await callback.answer("⚠️ Category not found.", show_alert=True)
+        return
+
+    user_id = callback.from_user.id
+    video = await video_service.get_random_video_by_category(category_id=cat_id, user_id=user_id)
+
+    if not video:
+        cat_emoji = category.get("emoji", "📁")
+        await callback.answer(f"⚠️ No videos uploaded in {cat_emoji} {category['name']} yet.", show_alert=True)
+        return
+
+    cat_emoji = category.get("emoji", "📁")
+    cat_name = category["name"]
+    desc_part = f"\n\n<i>{video['description']}</i>" if video.get("description") else ""
+
+    caption = (
+        f"🎬 <b>{video['title']}</b>\n"
+        f"━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📂 <b>Category:</b> {cat_emoji} {cat_name}"
+        f"{desc_part}\n"
+        f"━━━━━━━━━━━━━━━━━━━━━\n"
+        f"✨ <i>Enjoy watching!</i>"
+    )
+
+    await callback.answer("⏳ Streaming video...")
+
+    try:
+        await callback.message.answer_video(
+            video=video["file_id"],
+            caption=caption,
+            parse_mode="HTML",
+            supports_streaming=True,
+            reply_markup=get_video_player_keyboard(cat_id)
+        )
+        await video_service.record_watch(user_id=user_id, video_id=video["id"], is_reward=0)
+    except Exception as e:
+        logger.error("Error streaming video from category %s: %s", cat_id, e)
+        await callback.message.answer(
+            "⚠️ Unable to stream video at this moment.",
+            reply_markup=get_back_to_menu_keyboard()
+        )
 
 
 @router.callback_query(F.data.startswith("cat_"))

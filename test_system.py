@@ -108,7 +108,13 @@ async def run_tests():
     await test_db.record_video_watch(user_id=1001, video_id=vid1, is_reward=0)
     watched_video = await test_db.get_video(vid1)
     assert watched_video["views_count"] == 1
-    print("✅ 4. Video upload, categorization, pagination, and view tracking verified.")
+
+    # Test random video by category (prioritizes unwatched vid2)
+    rand_cat1 = await test_db.get_random_video_by_category(cat_id1, user_id=1001)
+    assert rand_cat1 is not None
+    assert rand_cat1["category_id"] == cat_id1
+    assert rand_cat1["id"] == vid2
+    print("✅ 4. Video upload, categorization, random by category, and view tracking verified.")
 
     # -------------------------------------------------------------
     # 6. Test Referral System & Anti-Cheat Rules

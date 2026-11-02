@@ -37,20 +37,17 @@ def get_main_menu_keyboard(user_id: int) -> InlineKeyboardMarkup:
 
 
 def get_categories_keyboard(categories: List[Dict[str, Any]]) -> InlineKeyboardMarkup:
-    """Keyboard displaying all available video categories."""
+    """Keyboard displaying all available video categories without video counts."""
     builder = InlineKeyboardBuilder()
 
     for cat in categories:
         builder.button(
-            text=f"{cat.get('emoji', '📁')} {cat['name']} ({cat.get('video_count', 0)})",
-            callback_data=f"cat_{cat['id']}_1"
+            text=f"{cat.get('emoji', '📁')} {cat['name']}",
+            callback_data=f"play_cat_{cat['id']}"
         )
     builder.adjust(2)  # 2 categories per row
 
-    # Bottom helper buttons
-    builder.row(
-        InlineKeyboardButton(text="🎲 Surprise Me (Random Video)", callback_data="watch_random"),
-    )
+    # Bottom helper buttons (Random button removed as requested)
     builder.row(
         InlineKeyboardButton(text="🔙 Back to Main Menu", callback_data="main_menu")
     )
@@ -122,7 +119,7 @@ def get_video_player_keyboard(category_id: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.row(
-        InlineKeyboardButton(text="🎲 Next Random Video", callback_data="watch_random"),
+        InlineKeyboardButton(text="▶️ Next Video", callback_data=f"play_cat_{category_id}"),
         InlineKeyboardButton(text="📂 Categories", callback_data="browse_categories")
     )
     builder.row(

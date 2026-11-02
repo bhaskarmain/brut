@@ -105,6 +105,13 @@ class VideoService:
         return await db.get_random_video(user_id)
 
     @staticmethod
+    async def get_random_video_by_category(
+        category_id: int, user_id: Optional[int] = None
+    ) -> Optional[Dict[str, Any]]:
+        """Get random video from a category, prioritizing unwatched videos."""
+        return await db.get_random_video_by_category(category_id, user_id)
+
+    @staticmethod
     async def get_video_stats() -> Dict[str, int]:
         """Aggregate video, category, and view counts."""
         total_videos = await db.get_total_videos_count()

@@ -67,19 +67,17 @@ let descPart = vid.description ? "\n\n📝 _" + vid.description + "_" : "";
 let caption =
   "🎬 *" + vid.title + "*\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
-  "📂 *Category:* " + catEmoji + " " + catName + "\n" +
-  "👁 *Views:* " + currentViews +
+  "📂 *Category:* " + catEmoji + " " + catName +
   descPart + "\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
   "✨ _Enjoy watching!_";
 
 let inlineKeyboard = [
   [
-    { text: "🎲 Next Random Video", callback_data: "/random_video" },
-    { text: catEmoji + " " + catName, callback_data: "/category " + vid.category_id }
+    { text: "▶️ Next Video", callback_data: "/category " + vid.category_id }
   ],
   [
-    { text: "📂 All Categories", callback_data: "/categories" },
+    { text: "📂 Categories", callback_data: "/categories" },
     { text: "🏠 Main Menu", callback_data: "/start" }
   ]
 ];
