@@ -15,7 +15,6 @@ let desc = (message && message.trim() === "/skip") ? "" : (message || "").trim()
 let catId = User.getProperty("upload_cat_id");
 let fileId = User.getProperty("upload_file_id");
 let title = User.getProperty("upload_title");
-let isZip = User.getProperty("upload_is_zip");
 
 let videos = Bot.getProperty("videos") || [];
 let newId = Date.now();
@@ -26,7 +25,7 @@ videos.push({
   file_id: fileId,
   title: title,
   description: desc,
-  is_zip: isZip ? true : false,
+  is_zip: false,
   views: 0,
   created_at: new Date().toISOString()
 });
@@ -45,16 +44,14 @@ let buttons = [
   [{ title: "🛠 Admin Dashboard", command: "/admin" }]
 ];
 
-let typeLabel = isZip ? "📦 ZIP Archive (Auto-Extracted)" : "🎬 Video";
-
 let summary =
-  "🎉 *Content Added Successfully!*\n" +
+  "🎉 *Video Added Successfully!*\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
   "🆔 *ID:* " + newId + "\n" +
-  "📁 *Type:* " + typeLabel + "\n" +
+  "🎬 *Type:* Native Streaming Video\n" +
   "🎬 *Title:* " + title + "\n" +
   "📝 *Description:* " + (desc || "None") + "\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
-  "The content is now live and available in the library!";
+  "The video is now live and will stream directly in Telegram's video player!";
 
 Bot.sendInlineKeyboard(buttons, summary);

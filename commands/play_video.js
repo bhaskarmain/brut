@@ -1,6 +1,6 @@
 /*CMD
 command: /play_video
-help: Streams the requested video or document directly to user with attached controls
+help: Streams the requested video directly to user with attached controls
 need_reply: false
 auto_retry_time: 
 folder: 
@@ -16,6 +16,48 @@ if (!vidId) {
   return;
 }
 
+// 1. Balance and Access Verification (1 Refer = 1 Video)
+let isAdmin = (user.telegramid == 8789936408 || user.telegramid == "8789936408");
+let validReferrals = Bot.getProperty("ref_count_" + user.telegramid) || 0;
+let rewardsClaimed = User.getProperty("rewards_claimed") || 0;
+let currentBalance = validReferrals - rewardsClaimed;
+
+if (!isAdmin && currentBalance <= 0) {
+  let botUsername = bot.name || "SmartVideoBot";
+  let refLink = "https://t.me/" + botUsername + "?start=ref_" + user.telegramid;
+  let shareText = "🎬 Watch amazing videos on this bot! Tap the link below to join:";
+  let shareUrl =
+    "https://t.me/share/url?url=" +
+    encodeURIComponent(refLink) +
+    "&text=" +
+    encodeURIComponent(shareText);
+
+  let buttons = [
+    [{ title: "📤 Share Referral Link", url: shareUrl }],
+    [{ title: "🎁 Referral Dashboard", command: "/referral" }],
+    [{ title: "🏠 Main Menu", command: "/start" }]
+  ];
+
+  let text =
+    "⚠️ *Not Enough Balance!*\n" +
+    "━━━━━━━━━━━━━━━━━━━━━\n" +
+    "Aapke paas video dekhne ke liye balance nahi hai!\n\n" +
+    "📌 *Balance Rule:*\n" +
+    "• *1 Referral = 1 Video*\n" +
+    "• Total Referrals: *" + validReferrals + "*\n" +
+    "• Videos Watched: *" + rewardsClaimed + "*\n" +
+    "• Available Balance: *0 Videos*\n\n" +
+    "🎁 *Balance Kaise Paye?*\n" +
+    "Apne doston ko invite karein! Har *1 refer* par aapko *1 video* dekhne ko milegi.\n\n" +
+    "🔗 *Aapka Referral Link:*\n" +
+    "`" + refLink + "`\n" +
+    "━━━━━━━━━━━━━━━━━━━━━";
+
+  Bot.sendInlineKeyboard(buttons, text);
+  return;
+}
+
+// 2. Fetch video
 let videos = Bot.getProperty("videos") || [];
 let vidIndex = -1;
 for (let i = 0; i < videos.length; i++) {
@@ -26,11 +68,22 @@ for (let i = 0; i < videos.length; i++) {
 }
 
 if (vidIndex === -1) {
-  Bot.sendMessage("⚠️ Content not found or has been removed.");
+  Bot.sendMessage("⚠️ Video not found or has been removed.");
   return;
 }
 
 let vid = videos[vidIndex];
+
+// If video was saved as a zip file, cannot stream
+if (vid.is_zip) {
+  Bot.sendMessage("⚠️ Telegram cannot stream ZIP archives in the video player. Please ask the admin to upload the extracted MP4 video!");
+  return;
+}
+
+// 3. Deduct balance if not admin
+if (!isAdmin) {
+  User.setProperty("rewards_claimed", rewardsClaimed + 1, "integer");
+}
 
 // Get category info
 let categories = Bot.getProperty("categories") || [];
@@ -62,12 +115,14 @@ if (watched.indexOf(vid.id) === -1) {
 let userWatchedCount = User.getProperty("user_watched_count") || 0;
 User.setProperty("user_watched_count", userWatchedCount + 1, "integer");
 
-// Stream video or document with interactive controls attached directly
+// Caption & Controls
+let newBalance = isAdmin ? "Unlimited (Admin)" : Math.max(0, currentBalance - 1);
 let descPart = vid.description ? "\n\n📝 _" + vid.description + "_" : "";
 let caption =
   "🎬 *" + vid.title + "*\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
-  "📂 *Category:* " + catEmoji + " " + catName +
+  "📂 *Category:* " + catEmoji + " " + catName + "\n" +
+  "💳 *Video Balance:* " + newBalance + (isAdmin ? "" : " Video(s)") +
   descPart + "\n" +
   "━━━━━━━━━━━━━━━━━━━━━\n" +
   "✨ _Enjoy watching!_";
@@ -82,25 +137,14 @@ let inlineKeyboard = [
   ]
 ];
 
-if (vid.is_zip) {
-  Api.sendDocument({
-    chat_id: chat.chatid,
-    document: vid.file_id,
-    caption: caption,
-    parse_mode: "Markdown",
-    reply_markup: {
-      inline_keyboard: inlineKeyboard
-    }
-  });
-} else {
-  Api.sendVideo({
-    chat_id: chat.chatid,
-    video: vid.file_id,
-    caption: caption,
-    parse_mode: "Markdown",
-    supports_streaming: true,
-    reply_markup: {
-      inline_keyboard: inlineKeyboard
-    }
-  });
-}
+// Always send as native streaming video
+Api.sendVideo({
+  chat_id: chat.chatid,
+  video: vid.file_id,
+  caption: caption,
+  parse_mode: "Markdown",
+  supports_streaming: true,
+  reply_markup: {
+    inline_keyboard: inlineKeyboard
+  }
+});

@@ -7,27 +7,32 @@ A production-ready Telegram Video Bot built specifically for **[Bots.Business](h
 ## 🌟 Key Features
 
 ### 👤 1. User Panel
-- **🎬 Watch Videos:** Instant video playback! When a user taps a category, the bot immediately streams a random video from that category.
-- **▶️ Next Video:** Users can keep tapping *Next Video* under the player to watch endless random videos from that category.
-- **Hidden Counts:** Video counts are hidden from the user interface for a clean, clean look.
+- **🎬 Watch Videos:** When a user taps a category, the bot immediately streams a random video from that category in the built-in Telegram video player (`supports_streaming: true`).
+- **▶️ Next Video:** Users can tap *Next Video* under the player to watch the next random video.
+- **Hidden Counts:** Video counts are hidden from the user interface for a clean, premium look.
 - **🌟 Daily Bonus:** Free daily surprise reward video every 24 hours.
-- **👤 My Account & 📊 Statistics:** Track watch history, referrals, and status.
+- **👤 My Account & 📊 Statistics:** Track watch history, referrals, and live available video balance.
 
-### 🎁 2. Referral Reward System
-- **Formula:** 2 Referrals = 1 Free Video (4 Referrals = 2 Videos, etc. — unlimited & repeatable).
-- **Interactive Dashboard:** Dynamic graphical progress bar (`[█████░░░░░] 50%`) and tier badges (🥉 Bronze, 🥈 Silver, 🥇 Gold).
+### 🎁 2. Referral Reward System (1 Refer = 1 Video Balance)
+- **Formula:** **1 Referral = 1 Video Access**!
+- **Strict Balance Enforcement:**
+  - If a user has `0 Balance`, clicking to watch a video displays `⚠️ Not Enough Balance!` along with their referral link and direct share buttons.
+  - When user refers a friend, 1 video credit is added to their balance immediately.
+  - Watching a video deducts 1 credit.
+- **Interactive Dashboard:** Live balance counter, rank badges (🥉 Bronze, 🥈 Silver, 🥇 Gold), and instant share links.
 - **Anti-Cheat:** Blocks self-referrals and duplicate accounts.
-- **One-Tap Claim:** Instant video reward delivery when unlocked.
 
 ### 🛠 3. Admin Panel (Exclusive Admin: `8789936408`)
-- **📤 Upload Video & ZIP Support:**
-  - Send direct MP4/MOV videos.
-  - Send `.ZIP` archives — automatic video processing & extraction!
+- **📤 Upload Video:**
+  - Direct MP4/MOV video upload & forwarding.
+  - All videos stream natively in Telegram video player with play/pause, scrub, and fullscreen.
+  - ZIP guidance: Instructs admin to extract archives on PC/phone and upload MP4 videos directly so Telegram streams them smoothly.
 - **📂 Add & Manage Categories:** Create, edit, and delete categories with custom emojis.
 - **📋 Video Catalog:** Manage, preview, and delete uploaded videos.
 - **📢 Broadcast:** Send announcements to all registered users.
 - **🚫 User Management:** Ban/unban users by numeric Telegram ID.
-- **📊 Advanced Analytics:** Real-time metrics, views counter, and top performing video tracker.
+- **📊 Advanced Analytics:** Real-time metrics, views counter, and user growth.
+- **👑 Admin Bypass:** Admin `8789936408` has unlimited video streaming without any referral or balance requirement.
 
 ---
 
@@ -46,26 +51,4 @@ A production-ready Telegram Video Bot built specifically for **[Bots.Business](h
 
 ## 👑 Admin Verification
 The bot is strictly configured for administrator ID **`8789936408`**.
-When you start the bot from that Telegram account, the **🛠 Open Admin Panel** button appears automatically, or you can send `/admin`.
-
----
-
-## 📁 Repository Structure
-
-```
-├── bot.json                 # Bots.Business sync descriptor
-├── commands/                # 37 BJS command files
-│   ├── _before.js           # Security middleware (ban filter)
-│   ├── _fallback.js         # Wildcard message handler
-│   ├── _start.js            # Main welcome & referral tracking
-│   ├── account.js           # User account profile
-│   ├── admin.js             # Master admin dashboard
-│   ├── admin_upload.js      # Video & ZIP upload wizard
-│   ├── categories.js        # Category selection
-│   ├── category.js          # Direct category random video player
-│   ├── claim_reward.js      # Referral reward delivery
-│   ├── daily_bonus.js       # 24h bonus claim
-│   └── ...
-├── BOTS_BUSINESS_GUIDE.md   # Complete step-by-step Urdu/English guide
-└── README.md                # Project documentation
-```
+When starting the bot from that Telegram account, the **🛠 Open Admin Panel** button appears automatically, or you can send `/admin`.

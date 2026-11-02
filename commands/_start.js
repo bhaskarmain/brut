@@ -80,19 +80,16 @@ if (!isRegistered) {
         let totalValid = Bot.getProperty("total_valid_referrals") || 0;
         Bot.setProperty("total_valid_referrals", totalValid + 1, "integer");
 
-        // Notify referrer
-        let req = Bot.getProperty("referrals_per_reward") || 2;
-        let nextIn = req - (newCount % req);
-        let alertMsg = (newCount % req === 0)
-          ? "\n\n🎁 *Awesome! You just unlocked a free video reward!* Open /referral to claim it now!"
-          : "\n\n🎯 _Only " + nextIn + " more invite(s) until your next free reward!_";
+        // Notify referrer (1 referral = 1 video balance)
+        let req = Bot.getProperty("referrals_per_reward") || 1;
 
         try {
           Bot.sendMessageToChatWithId(
             refId,
             "🎉 *New Referral Joined!*\n\n" +
             "User *" + (user.first_name || "Friend") + "* joined using your link!\n" +
-            "• Total Valid Referrals: *" + newCount + "*" + alertMsg
+            "• Total Referrals: *" + newCount + "*\n\n" +
+            "🎁 *+1 Video Balance Credited!* Tap /categories to watch a video!"
           );
         } catch (e) {
           // If referrer chat unreachable
@@ -129,9 +126,9 @@ let welcomeText =
   "👋 *Welcome, " + (user.first_name || "Friend") + "!*\n\n" +
   "🎬 *Smart Video Reward Bot*\n\n" +
   "📌 *What you can do:*\n" +
-  "• 🎬 *Watch Videos:* Choose a category to instantly stream random videos.\n" +
+  "• 🎬 *Watch Videos:* Choose a category to stream videos (1 referral = 1 video).\n" +
   "• 🌟 *Daily Bonus:* Claim a free surprise video every 24 hours!\n" +
-  "• 🎁 *Referral Rewards:* Invite friends & earn *1 free video every 2 referrals*!\n" +
+  "• 🎁 *Referral Rewards:* Invite friends & earn *1 video per 1 referral*!\n" +
   "• 📊 *Track Stats:* Monitor your views, referrals, and rewards.\n\n" +
   "Select an option below to get started 👇";
 
